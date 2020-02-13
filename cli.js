@@ -40,11 +40,11 @@ const doNext = async () => {
     .get(url, {
       headers: {
         authorization: `Bearer ${user.access_token}`
-      }
+      },
+      timeout: 30000
     })
     .then( response => {
       lastErrorTimeout = 500;
-      console.log('carlos goot command');
       if (response.data.command && response.data.command.type === 'configUpdate') {
         lastSync = Date.now();
         console.log('Got Config: ', response.data.command.config);

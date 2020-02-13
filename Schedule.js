@@ -46,7 +46,9 @@ export class Schedule {
 
     const url = `http://${this.ipaddress}/${commandStr[this.data.command]}/200`;
     console.log('Sending command: ', url);
-    return await axios.post(url)
+    return await axios.post(url, {
+      timeout: 5000
+    })
       .then(() => true)
       .catch(err => {
         console.log(`Got error: ${err.message}`)
