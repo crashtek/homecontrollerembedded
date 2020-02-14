@@ -1,4 +1,3 @@
-import config from './config';
 import winston from 'winston';
 import 'winston-daily-rotate-file';
 
@@ -11,7 +10,7 @@ const transport = new winston.transports.DailyRotateFile({
   maxSize: '20m',
   maxFiles: '365d',
   timestamp: true,
-  level: config('LOG_LEVEL'),
+  level: process.env.LOG_LEVEL,
   handleExceptions: true,
   json: false,
   colorize: true

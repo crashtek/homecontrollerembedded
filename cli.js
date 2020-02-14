@@ -2,13 +2,14 @@ import dotenv from 'dotenv';
 import axios from 'axios';
 import fs from "fs";
 
+dotenv.config();
+
 import authService from './auth';
 import { tryToReadJsonFile } from './utils';
 import ScheduleClock from './ScheduleClock';
 import logger from './logger';
 
 
-dotenv.config();
 
 const dataStoreName = '.datastore.json';
 
