@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from './logger';
 
 const getNextDoW = (lastDoW) => {
   let nextDoW = lastDoW + 1;
@@ -45,13 +46,13 @@ export class Schedule {
     };
 
     const url = `http://${this.ipaddress}/${commandStr[this.data.command]}/200`;
-    console.log('Sending command: ', url);
+    logger.info('Sending command: ', url);
     return await axios.post(url, {
       timeout: 5000
     })
       .then(() => true)
       .catch(err => {
-        console.log(`Got error: ${err.message}`)
+        logger.info(`Got error: ${err.message}`)
         return false;
       })
   }

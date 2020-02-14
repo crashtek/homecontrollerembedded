@@ -1,4 +1,5 @@
 import Schedule from './Schedule';
+import logger from './logger';
 
 const getNextSchedule = (room) => {
   let nextSchedule = null;
@@ -51,12 +52,12 @@ export class ScheduleClock {
     });
 
     if (!nextTime) {
-      console.log('No schedules found, doing nothing...');
+      logger.info('No schedules found, doing nothing...');
       return;
     } // end early if there are no schedules
 
     const milliSecondsToWait = nextTime - Date.now();
-    console.log(`Scheduling next command: waiting ${milliSecondsToWait} milliSeconds for ${nextTime}`);
+    logger.info(`Scheduling next command: waiting ${milliSecondsToWait} milliSeconds for ${nextTime}`);
     this.nextTime = nextTime;
     this.timer = setTimeout(this.execute.bind(this), milliSecondsToWait);
   }
@@ -75,11 +76,11 @@ export class ScheduleClock {
           this.currentSchedules = this.nextSchedules;
           this.currentSchedules.unshift(nextSchedule);
           allPassed = false;
-          console.log(`error executing schedule, waiting ${this.lastDelay} millisecond(s) before trying again...`);
+          logger.info(`error executing schedule, waiting ${this.lastDelay} millisecond(s) before trying again...`);
           setTimeout(this.execute.bind(this), this.lastDelay);
         } else {
           // next schedule is due, just kill this list of schedules
-          console.log('Schedules failed, but next schedule is too soon, so giving up');
+          logger.info('Schedules failed, but next schedule is too soon, so giving up');
           this.currentSchedules = null;
         }
       } else {

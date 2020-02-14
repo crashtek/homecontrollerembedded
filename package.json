@@ -18,6 +18,8 @@
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "open": "^7.0.2",
-    "qrcode": "^1.4.4"
+    "qrcode": "^1.4.4",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2"
   }
 }

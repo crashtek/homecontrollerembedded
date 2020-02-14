@@ -5,6 +5,7 @@ import qrcode from 'qrcode';
 import jwt from 'jsonwebtoken';
 import open from 'open';
 import { tryToReadJsonFile } from './utils';
+import logger from './logger';
 
 class AuthService {
   constructor() {
@@ -89,12 +90,12 @@ class AuthService {
     const loginData = this.verificationResponse ? this.verificationResponse : await this.getCode();
     if (auto) {
       // Fetch the code if it hasn't been done yet
-      console.log('Attempting to open the browser');
+      logger.info('Attempting to open the browser');
       open(loginData.verification_uri_complete);
     } else {
-      console.log('Try using this QR code or clicking this link', loginData.verification_uri_complete, ' MAKE SURE' +
+      logger.info('Try using this QR code or clicking this link', loginData.verification_uri_complete, ' MAKE SURE' +
         ' THIS CODE IS VISIBLE!!! ', loginData.user_code);
-      console.log(loginData.qrText);
+      logger.info(loginData.qrText);
     }
 
     // wait for the user to log in
@@ -111,10 +112,10 @@ class AuthService {
 
     if (decodedData.error) {
       switch(decodedData.error) {
-        case 'authorization_pending': console.log('Not ready yet'); break;
+        case 'authorization_pending': logger.info('Not ready yet'); break;
         case 'slow_down':
           this.loginRequestData.interval += 1;
-          console.log('Slow Down!');
+          logger.info('Slow Down!');
           break;
         case 'access_denied':
           console.error('User is not authorized');
