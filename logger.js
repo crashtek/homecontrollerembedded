@@ -1,7 +1,7 @@
-import winston from 'winston';
+import {createLogger, transports, format} from 'winston';
 import 'winston-daily-rotate-file';
 
-const transport = new winston.transports.DailyRotateFile({
+const transport = new transports.DailyRotateFile({
   dirname: 'logs',
   filename: 'application-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
@@ -20,7 +20,8 @@ transport.on('rotate', function(oldFilename, newFilename) {
   logger.info(`Rotating from ${oldFilename} to ${newFilename}`);
 });
 
-const logger = winston.createLogger({
+const logger = createLogger({
+  format: format.timestamp(),
   transports: [
     transport
   ],
