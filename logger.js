@@ -21,7 +21,11 @@ transport.on('rotate', function(oldFilename, newFilename) {
 });
 
 const logger = createLogger({
-  format: format.timestamp(),
+  format: format.combine(
+    format.timestamp(),
+    // format.splat(),
+    format.json()
+  ),
   transports: [
     transport
   ],

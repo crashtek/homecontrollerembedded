@@ -1,5 +1,4 @@
 import fs from "fs";
-import logger from './logger';
 import axios from 'axios';
 import logger from './logger';
 

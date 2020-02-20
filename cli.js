@@ -62,12 +62,14 @@ const doNext = async () => {
       if (response.data.command) {
         if (response.data.command.type === 'configUpdate') {
           lastSync = Date.now();
-          logger.info(`Got Config: ${JSON.stringify(response.data.command.config)}`;
+          logger.info(`Got Config: ${JSON.stringify(response.data.command.config)}`);
           config = response.data.command.config;
           fs.writeFileSync(dataStoreName, JSON.stringify(response.data.command.config));
           clock.setRooms(config);
         } else if (response.data.command.type === 'command') {
-          logger.info()
+          logger.info('Got command: ', response.data.command.command);
+          return commandWindow(response.data.command.command.ipaddress, response.data.command.command.command)
+            .then(() => true);
         } else {
           logger.error(`Don't know what to do with ${response.data.command}`);
         }
