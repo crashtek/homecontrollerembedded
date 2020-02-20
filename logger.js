@@ -2,8 +2,9 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 
 const transport = new winston.transports.DailyRotateFile({
+  dirname: 'logs',
   filename: 'application-%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
+  datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
   maxFiles: '365d',
