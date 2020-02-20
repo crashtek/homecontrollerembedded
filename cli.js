@@ -5,7 +5,7 @@ import fs from "fs";
 dotenv.config();
 
 import authService from './auth';
-import { tryToReadJsonFile } from './utils';
+import { tryToReadJsonFile, commandWindow } from './utils';
 import ScheduleClock from './ScheduleClock';
 import logger from './logger';
 
@@ -59,12 +59,18 @@ const doNext = async () => {
     })
     .then( response => {
       lastErrorTimeout = 500;
-      if (response.data.command && response.data.command.type === 'configUpdate') {
-        lastSync = Date.now();
-        logger.info('Got Config: ', response.data.command.config);
-        config = response.data.command.config;
-        fs.writeFileSync(dataStoreName, JSON.stringify(response.data.command.config));
-        clock.setRooms(config);
+      if (response.data.command) {
+        if (response.data.command.type === 'configUpdate') {
+          lastSync = Date.now();
+          logger.info(`Got Config: ${JSON.stringify(response.data.command.config)}`;
+          config = response.data.command.config;
+          fs.writeFileSync(dataStoreName, JSON.stringify(response.data.command.config));
+          clock.setRooms(config);
+        } else if (response.data.command.type === 'command') {
+          logger.info()
+        } else {
+          logger.error(`Don't know what to do with ${response.data.command}`);
+        }
       }
 
       return true;

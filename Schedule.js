@@ -1,5 +1,4 @@
-import axios from 'axios';
-import logger from './logger';
+import { commandWindow } from './utils';
 
 const getNextDoW = (lastDoW) => {
   let nextDoW = lastDoW + 1;
@@ -40,21 +39,7 @@ export class Schedule {
   };
 
   async exec() {
-    const commandStr = {
-      up: 6,
-      down: 5
-    };
-
-    const url = `http://${this.ipaddress}/${commandStr[this.data.command]}/200`;
-    logger.info('Sending command: ', url);
-    return await axios.post(url, {
-      timeout: 5000
-    })
-      .then(() => true)
-      .catch(err => {
-        logger.info(`Got error: ${err.message}`)
-        return false;
-      })
+    return await commandWindow(this.ipaddress, this.data.command);
   }
 }
 

@@ -1,4 +1,7 @@
 import fs from "fs";
+import logger from './logger';
+import axios from 'axios';
+import logger from './logger';
 
 export const tryToReadJsonFile = (fileName, defaultValue) => {
   try {
@@ -10,4 +13,24 @@ export const tryToReadJsonFile = (fileName, defaultValue) => {
   }
 
   return defaultValue;
+};
+
+export const commandWindow = async (ip, command, seconds) => {
+  const secondsToCommand = seconds ? seconds : 200;
+  const commandStr = {
+    up: 6,
+    down: 5
+  };
+
+  const url = `http://${ip}/${commandStr[command]}/${secondsToCommand}`;
+  logger.info('Sending command: ', url);
+  return await axios.post(url, {
+    timeout: 5000
+  })
+    .then(() => true)
+    .catch(err => {
+      logger.info(`Got error: ${err.message}`)
+      return false;
+    })
+
 };
