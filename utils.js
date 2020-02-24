@@ -8,7 +8,7 @@ export const tryToReadJsonFile = (fileName, defaultValue) => {
     return JSON.parse(fileContents);
   } catch(err) {
     // Ignore this error, it just means we don't have any stored auth data yet
-    console.log(`No Data Found in ${fileName}, ignoring: `, err.message);
+    logger.warn(`No Data Found in ${fileName}, ignoring: ${err.message}`);
   }
 
   return defaultValue;
@@ -22,13 +22,13 @@ export const commandWindow = async (ip, command, seconds) => {
   };
 
   const url = `http://${ip}/${commandStr[command]}/${secondsToCommand}`;
-  logger.info('Sending command: ', url);
+  logger.info('Sending command: ', { url });
   return await axios.post(url, {
     timeout: 5000
   })
     .then(() => true)
     .catch(err => {
-      logger.info(`Got error: ${err.message}`)
+      logger.error(`Got error: ${err.message}`);
       return false;
     })
 
