@@ -18,7 +18,8 @@ export const commandWindow = async (ip, command, seconds) => {
   const secondsToCommand = seconds ? seconds : 200;
   const commandStr = {
     up: 6,
-    down: 5
+    down: 5,
+    stop: 7
   };
 
   const url = `http://${ip}/${commandStr[command]}/${secondsToCommand}`;
