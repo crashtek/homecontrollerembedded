@@ -37,7 +37,7 @@ const doNext = async () => {
     logger.info('got config: ', config);
     clock = new ScheduleClock(config);
     if (config.length > 0) {
-      logger.info('Found config in datastore');
+      logger.info('Found config in datastore', config);
       config.forEach(room => {
         if (lastSync < room.lastUpdate) lastSync = room.lastUpdate;
       });
@@ -48,7 +48,7 @@ const doNext = async () => {
     `${process.env.WEB_SERVICE_URL}/api/command/next?homeId=1`;
   if (lastLastSync !== lastSync) {
     lastLastSync = lastSync;
-    logger.info('requesting command from: ', url);
+    logger.info('requesting command from: ', { url });
   }
   const keepGoing = await axios
     .get(url, {
@@ -62,16 +62,16 @@ const doNext = async () => {
       if (response.data.command) {
         if (response.data.command.type === 'configUpdate') {
           lastSync = Date.now();
-          logger.info(`Got Config: ${JSON.stringify(response.data.command.config)}`);
+          logger.info('Got Config from home controller web', response.data.command.config);
           config = response.data.command.config;
           fs.writeFileSync(dataStoreName, JSON.stringify(response.data.command.config));
           clock.setRooms(config);
         } else if (response.data.command.type === 'command') {
-          logger.info('Got command: ', response.data.command.command);
+          logger.info('Got command to command the shades', response.data);
           return commandWindow(response.data.command.command.ipaddress, response.data.command.command.command)
             .then(() => true);
         } else {
-          logger.error(`Don't know what to do with ${response.data.command}`);
+          logger.error('Don\'t know what to do with command', response.data);
         }
       }
 
@@ -85,7 +85,7 @@ const doNext = async () => {
       }
 
       if (lastErrorTimeout < 30000) lastErrorTimeout = lastErrorTimeout * 2;
-      logger.info(`Got an error waiting for response from web: ${err.message} waiting ${lastErrorTimeout/1000} second(s) before continuing`);
+      logger.error(`Got an error waiting for response from web: ${err.message} waiting ${lastErrorTimeout/1000} second(s) before continuing`);
       setTimeout(doNext, lastErrorTimeout);
       return false; // Don't call doNext because we are going to wait some before calling it again
     });
@@ -95,7 +95,7 @@ const doNext = async () => {
 
 authService.waitForUser(false)
   .then(user => {
-    logger.info('Welcome ', user.name);
+    logger.info(`Welcome ${user.name}`);
     return doNext();
   })
   .catch(console.error);
